@@ -29,7 +29,6 @@ year_built <- as.numeric(as.character((map@data$year_built)))
 map_data <- data.frame(cbind(map_points, year_built))
 map_data <- map_data[!is.na(map_data$year_built),]
 
-
 anc_map <- get_map("Anchorage, AK", maptype = "cloudmade")
 library(dplyr)
 
