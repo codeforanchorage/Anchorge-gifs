@@ -1,0 +1,17 @@
+{
+    "contents" : "library(rgdal)\nrequire(maptools)\nrequire(ggplot2)\nrequire(plyr)\nlibrary(ggplot2)\nlibrary(ggmap)\nlibrary(animation)\nno_formatting  <-   theme(axis.line=element_blank(),\n                          axis.text.x=element_blank(),\n                          axis.text.y=element_blank(),\n                          axis.ticks=element_blank(),\n                          axis.title.x=element_blank(),\n                          axis.title.y=element_blank(),\n                          legend.position=\"none\",\n                          panel.background=element_blank(),\n                          panel.border=element_blank(),\n                          panel.grid.major=element_blank(),\n                          panel.grid.minor=element_blank(),\n                          plot.background=element_blank())\n\n\n\nmap = readOGR(\"output.geojson\", \"OGRGeoJSON\")\n#plot(map)\nmap@data$id = rownames(map@data)\ngCentroid(map, byid = T)\nmap_points <- gCentroid(map, byid = T)@coords\nyear_built <- as.numeric(as.character((map@data$year_built)))\nmap_data <- data.frame(cbind(map_points, year_built))\nmap_data <- map_data[!is.na(map_data$year_built),]\n\n\nanc_map <- get_map(\"Anchorage, AK\", maptype = \"cloudmade\")\nlibrary(dplyr)\n\nsaveGIF({\nfor(i in sort(unique(map_data$year_built))[-1]) {\n\nthis_year <- map_data %>%\n     filter(year_built == i) \n\nprevious_years <- map_data %>%\n  filter(year_built < i)\n\nprint(ggmap(anc_map) + geom_point(data = previous_years, aes(x = x, y = y, color = \"red\"))  + \n                   geom_point(data = this_year, aes(x = x, y = y), color = \"blue\") + no_formatting)\n}})\n\n\n",
+    "created" : 1431800767376.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1718037873",
+    "id" : "9302E6EA",
+    "lastKnownWriteTime" : 1431806304,
+    "path" : "C:/Users/Hans T/Desktop/Anchorge gifs/createGIF.R",
+    "project_path" : "createGIF.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
